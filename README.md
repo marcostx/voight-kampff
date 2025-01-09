@@ -1,6 +1,6 @@
-# Movie Recommendation System
+# Voight Kampff System
 
-A simple yet organized movie recommendation system built with Python, using collaborative filtering to suggest movies based on user ratings.
+A simple yet organized movie recommendation system built with Python
 
 ## Features
 
