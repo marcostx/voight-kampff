@@ -1,11 +1,16 @@
 """FastAPI server implementation for the movie recommendation system."""
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
 from typing import List, Dict
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
 
-from ..data.loader import MovieDataLoader
-from ..models.collaborative_filtering import CollaborativeFilter
+from src.data.loader import MovieDataLoader
+from src.models.collaborative_filtering import CollaborativeFilter
 
 app = FastAPI(title="Movie Recommender API")
 
