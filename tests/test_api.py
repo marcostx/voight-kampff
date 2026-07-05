@@ -3,9 +3,18 @@
 Importing src.api.server loads the real MovieLens dataset and trains the
 model, so these are integration tests; run pytest from the repo root.
 """
+from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
 
+dataset_dir = Path("data/raw") / "ml-latest-small"
+if not (dataset_dir / "movies.csv").exists() or not (dataset_dir / "ratings.csv").exists():
+    pytest.skip(
+        "Real MovieLens dataset not found at data/raw/ml-latest-small; skipping API integration tests",
+        allow_module_level=True,
+    )
+
 from src.api.server import app
 
 client = TestClient(app)

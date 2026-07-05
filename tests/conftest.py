@@ -57,7 +57,12 @@ def synthetic_loader(synthetic_data_dir: Path) -> MovieDataLoader:
 
 @pytest.fixture(scope="session")
 def real_loader() -> MovieDataLoader:
-    """A loader over the real MovieLens dataset committed in the repo."""
+    """A loader over a local MovieLens dataset, if available."""
+    dataset_dir = Path("data/raw") / "ml-latest-small"
+    if not (dataset_dir / "movies.csv").exists() or not (dataset_dir / "ratings.csv").exists():
+        pytest.skip(
+            "Real MovieLens dataset not found at data/raw/ml-latest-small; skipping integration tests"
+        )
     loader = MovieDataLoader("data/raw")
     loader.load_data()
     return loader
