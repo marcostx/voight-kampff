@@ -17,10 +17,10 @@ app = FastAPI(title="Movie Recommender API")
 # Initialize data and model
 data_loader = MovieDataLoader("data/raw")
 movies_df, ratings_df = data_loader.load_data()
-user_item_matrix = data_loader.create_user_item_matrix()
+user_item_matrix, rated_movie_ids = data_loader.create_user_item_matrix()
 
 model = CollaborativeFilter()
-model.fit(user_item_matrix, movies_df['movieId'].tolist())
+model.fit(user_item_matrix, rated_movie_ids)
 
 class MovieRecommendation(BaseModel):
     """Pydantic model for movie recommendations."""
