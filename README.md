@@ -1,4 +1,5 @@
 # Voight Kampff System
+<img width="733" height="412" alt="CNg0GG8x-13366_4643dd49216b67d9c617ceb260e45684" src="https://github.com/user-attachments/assets/6e369020-62c1-4b2e-aae7-0c7d7f4ae074" />
 
 A simple yet organized movie recommendation system built with Python
 
