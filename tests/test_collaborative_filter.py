@@ -1,4 +1,5 @@
 """Tests for CollaborativeFilter with known-similarity fixtures."""
+# pylint: disable=missing-function-docstring, redefined-outer-name  # pytest fixture idiom
 import numpy as np
 import pytest
 

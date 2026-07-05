@@ -1,9 +1,9 @@
 """Shared fixtures for the Voight-Kampff test suite."""
+# pylint: disable=redefined-outer-name  # fixtures consuming fixtures is the pytest idiom
 from pathlib import Path
 from typing import List, Tuple
 
 import numpy as np
-import pandas as pd
 import pytest
 
 from src.data.loader import MovieDataLoader
@@ -57,12 +57,13 @@ def synthetic_loader(synthetic_data_dir: Path) -> MovieDataLoader:
 
 @pytest.fixture(scope="session")
 def real_loader() -> MovieDataLoader:
-    """A loader over a local MovieLens dataset, if available."""
-    dataset_dir = Path("data/raw") / "ml-latest-small"
-    if not (dataset_dir / "movies.csv").exists() or not (dataset_dir / "ratings.csv").exists():
-        pytest.skip(
-            "Real MovieLens dataset not found at data/raw/ml-latest-small; skipping integration tests"
-        )
+    """A loader over a local MovieLens dataset, if available."""
+    dataset_dir = Path("data/raw") / "ml-latest-small"
+    if not (dataset_dir / "movies.csv").exists() or not (dataset_dir / "ratings.csv").exists():
+        pytest.skip(
+            "Real MovieLens dataset not found at data/raw/ml-latest-small; "
+            "skipping integration tests"
+        )
     loader = MovieDataLoader("data/raw")
     loader.load_data()
     return loader
@@ -72,4 +73,5 @@ def real_loader() -> MovieDataLoader:
 def real_matrix_and_ids(
     real_loader: MovieDataLoader,
 ) -> Tuple[np.ndarray, List[int]]:
+    """The real user-item matrix and its aligned movie IDs."""
     return real_loader.create_user_item_matrix()

@@ -1,6 +1,5 @@
 """Tests for MovieDataLoader: shape checks and matrix/ID alignment."""
-import numpy as np
-import pandas as pd
+# pylint: disable=missing-function-docstring  # test names are self-describing
 import pytest
 
 from src.data.loader import MovieDataLoader
