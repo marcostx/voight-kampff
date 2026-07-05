@@ -31,19 +31,24 @@ class MovieDataLoader:
         )
         return self.movies_df, self.ratings_df
     
-    def create_user_item_matrix(self) -> np.ndarray:
+    def create_user_item_matrix(self) -> Tuple[np.ndarray, List[int]]:
         """Create a user-item matrix for collaborative filtering.
         
+        Only movies that have at least one rating appear as columns, so the
+        movie IDs are returned alongside the matrix to keep them aligned.
+        Fitting a model with IDs from movies.csv instead would misattribute
+        similarity scores to the wrong movies.
+        
         Returns:
-            numpy array containing user-item ratings matrix
+            Tuple of (user-item ratings matrix, movie IDs aligned with its columns)
         """
         if self.ratings_df is None:
             raise ValueError("Ratings data not loaded. Call load_data() first.")
             
-        user_item_matrix = self.ratings_df.pivot(
+        rating_pivot = self.ratings_df.pivot(
             index='userId',
             columns='movieId',
             values='rating'
-        ).fillna(0).values
+        ).fillna(0)
         
-        return user_item_matrix
+        return rating_pivot.values, rating_pivot.columns.tolist()

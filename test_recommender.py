@@ -12,12 +12,12 @@ def main() -> None:
     print(movies_df.head())
 
     # Test user-item matrix creation
-    user_item_matrix = loader.create_user_item_matrix()
+    user_item_matrix, rated_movie_ids = loader.create_user_item_matrix()
     print('\nUser-item matrix shape:', user_item_matrix.shape)
 
     # Test model
     model = CollaborativeFilter()
-    model.fit(user_item_matrix, movies_df['movieId'].tolist())
+    model.fit(user_item_matrix, rated_movie_ids)
 
     # Get recommendations for a sample movie
     test_movie_id = movies_df['movieId'].iloc[0]
