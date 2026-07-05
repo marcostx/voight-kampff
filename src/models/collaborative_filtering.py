@@ -41,8 +41,11 @@ class CollaborativeFilter:
         movie_idx = self.movie_ids.index(movie_id)
         movie_similarities = self.item_similarity_matrix[movie_idx]
         
-        # Get indices of most similar movies (excluding the input movie)
-        similar_indices = np.argsort(movie_similarities)[::-1][1:n_recommendations+1]
+        # Exclude the input movie by index rather than assuming it sorts
+        # first: other movies can tie with it at similarity 1.0, making the
+        # order among them arbitrary.
+        ranked_indices = np.argsort(movie_similarities)[::-1]
+        similar_indices = ranked_indices[ranked_indices != movie_idx][:n_recommendations]
         
         # Return movie IDs and similarity scores
         recommendations = [
