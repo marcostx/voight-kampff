@@ -4,7 +4,11 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
+# The sys.path hack above forces late imports; goes away with proper
+# packaging (roadmap issue #6).
+# pylint: disable=wrong-import-position
 from typing import List, Dict
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
@@ -37,11 +41,11 @@ async def get_recommendations(
     n_recommendations: int = 5
 ) -> List[Dict]:
     """Get movie recommendations based on a movie ID.
-    
+
     Args:
         movie_id: ID of the movie to base recommendations on
         n_recommendations: Number of recommendations to return
-        
+
     Returns:
         List of recommended movies with their details
     """
@@ -51,8 +55,8 @@ async def get_recommendations(
             n_recommendations
         )
     except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-        
+        raise HTTPException(status_code=404, detail=str(e)) from e
+
     # Get movie titles for recommendations
     result = []
     for rec_id, score in recommendations:
@@ -64,7 +68,7 @@ async def get_recommendations(
             "title": movie_title,
             "similarity_score": score
         })
-        
+
     return result
 
 if __name__ == "__main__":

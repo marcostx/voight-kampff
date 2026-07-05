@@ -1,0 +1,15 @@
+[MAIN]
+py-version = 3.12
+ignore-paths = ^\.venv/.*$,^data/.*$
+
+[FORMAT]
+max-line-length = 100
+
+[BASIC]
+# Short names that are idiomatic in this codebase (exceptions, dataframes).
+good-names = e, df, n
+
+[MESSAGES CONTROL]
+disable =
+    # Pydantic models and small dataclass-style holders are fine.
+    too-few-public-methods

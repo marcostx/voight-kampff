@@ -1,3 +1,4 @@
+"""Setuptools shim; full pyproject.toml packaging is roadmap issue #6."""
 from setuptools import setup, find_packages
 
 setup(
