@@ -74,9 +74,10 @@ curl http://localhost:8000/recommendations/1
 
 ### Testing
 
-Run the test script to verify the system:
+Install the dev dependencies and run the test suite with pytest:
 ```bash
-python test_recommender.py
+pip install -r requirements-dev.txt
+pytest
 ```
 
 ## Documentation
