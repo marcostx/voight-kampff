@@ -14,17 +14,19 @@ A simple yet organized movie recommendation system built with Python
 ## Project Structure
 
 ```
-movie_recommender/
+voight-kampff/
 ├── src/
-│   ├── data/          # Data processing and loading modules
-│   ├── models/        # Recommendation models
-│   ├── utils/         # Utility functions
-│   └── api/           # FastAPI endpoints
+│   └── voight_kampff/
+│       ├── data/      # Data processing and loading modules
+│       ├── models/    # Recommendation models
+│       ├── utils/     # Utility functions
+│       └── api/       # FastAPI endpoints
 ├── docs/              # Documentation
 │   ├── architecture.md       # System architecture details
 │   ├── data_pipeline.py     # Pipeline visualization generator
 │   └── data_pipeline.png    # Visual representation of data flow
 ├── tests/             # Unit tests
+├── pyproject.toml     # Packaging, dependencies, and entry points
 └── data/
     ├── raw/          # Raw dataset files
     └── processed/    # Processed dataset files
@@ -32,16 +34,16 @@ movie_recommender/
 
 ## Requirements
 
-- Python 3.12+
+- Python 3.11+
 - Virtual environment (recommended)
-- MovieLens dataset (automatically downloaded)
+- MovieLens dataset in `data/raw/ml-latest-small/`
 
 ## Installation
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
-cd movie_recommender
+git clone https://github.com/marcostx/voight-kampff.git
+cd voight-kampff
 ```
 
 2. Create a virtual environment:
@@ -50,18 +52,19 @@ python -m venv venv
 source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 ```
 
-3. Install dependencies:
+3. Install the package:
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ## Usage
 
 ### Running the API Server
 
-Start the FastAPI server:
+Start the FastAPI server from the repository root (it reads the dataset
+from `data/raw/`):
 ```bash
-python src/api/server.py
+voight-kampff-server
 ```
 
 The API will be available at `http://localhost:8000`
@@ -77,7 +80,7 @@ curl http://localhost:8000/recommendations/1
 
 Install the dev dependencies and run the test suite with pytest:
 ```bash
-pip install -r requirements-dev.txt
+pip install -e ".[dev]"
 pytest
 ```
 

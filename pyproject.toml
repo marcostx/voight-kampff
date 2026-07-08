@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "voight-kampff"
+version = "0.1.0"
+description = "Movie recommendation system: item-based collaborative filtering served over FastAPI"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Marcos Teixeira" }]
+requires-python = ">=3.11"
+dependencies = [
+    "pandas>=2.2.3",
+    "numpy>=2.2.1",
+    "scikit-learn>=1.6.0",
+    "fastapi>=0.115.6",
+    "uvicorn>=0.34.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.4",
+    "httpx>=0.28.1",
+    "pylint>=3.3",
+]
+
+[project.urls]
+Repository = "https://github.com/marcostx/voight-kampff"
+
+[project.scripts]
+voight-kampff-server = "voight_kampff.api.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

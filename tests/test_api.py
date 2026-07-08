@@ -1,6 +1,6 @@
 """API tests via FastAPI TestClient.
 
-Importing src.api.server loads the real MovieLens dataset and trains the
+Importing voight_kampff.api.server loads the real MovieLens dataset and trains the
 model, so these are integration tests; run pytest from the repo root.
 """
 # pylint: disable=missing-function-docstring  # test names are self-describing
@@ -17,7 +17,7 @@ if not (dataset_dir / "movies.csv").exists() or not (dataset_dir / "ratings.csv"
         allow_module_level=True,
     )
 
-from src.api.server import app  # pylint: disable=wrong-import-position
+from voight_kampff.api.server import app  # pylint: disable=wrong-import-position
 
 client = TestClient(app)
 

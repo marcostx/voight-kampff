@@ -2,7 +2,7 @@
 # pylint: disable=missing-function-docstring  # test names are self-describing
 import pytest
 
-from src.data.loader import MovieDataLoader
+from voight_kampff.data.loader import MovieDataLoader
 from tests.conftest import N_USERS, RATED_MOVIE_IDS, UNRATED_MOVIE_ID
 
 
