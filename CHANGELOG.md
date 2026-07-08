@@ -39,6 +39,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ([#6](https://github.com/marcostx/voight-kampff/issues/6))
 - README install/run/test instructions updated for packaged usage
   (`pip install -e .`, `voight-kampff-server`)
+- Repo hygiene: `.gitignore` is now authoritative — ignores macOS
+  `.DS_Store`, the `.idea/` IDE folder, and the local `data/` directory
+  explicitly, replacing a blanket `*.csv` pattern that would also have
+  hidden future test fixtures; stray Finder metadata deleted and
+  `ROADMAP.md` checked in
+  ([#8](https://github.com/marcostx/voight-kampff/issues/8))
 
 ### Fixed
 

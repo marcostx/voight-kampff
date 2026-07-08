@@ -24,8 +24,10 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-*.csv
 MANIFEST
+
+# Datasets (downloaded locally; never committed)
+data/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -164,10 +166,11 @@ cython_debug/
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
+#  and can be added to the global gitignore or merged into this file.
+.idea/
 
 # PyPI configuration file
 .pypirc
-.idea
+
+# macOS Finder metadata
+.DS_Store
