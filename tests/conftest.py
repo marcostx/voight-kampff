@@ -6,7 +6,7 @@ from typing import List, Tuple
 import numpy as np
 import pytest
 
-from src.data.loader import MovieDataLoader
+from voight_kampff.data.loader import MovieDataLoader
 
 # Synthetic catalog: movie 4 ("Phantom Replicant") deliberately has no
 # ratings, so it must be absent from the user-item matrix columns. This is

@@ -1,20 +1,12 @@
 """FastAPI server implementation for the movie recommendation system."""
-import sys
-import os
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
-
-# The sys.path hack above forces late imports; goes away with proper
-# packaging (roadmap issue #6).
-# pylint: disable=wrong-import-position
 from typing import List, Dict
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
 
-from src.data.loader import MovieDataLoader
-from src.models.collaborative_filtering import CollaborativeFilter
+from voight_kampff.data.loader import MovieDataLoader
+from voight_kampff.models.collaborative_filtering import CollaborativeFilter
 
 app = FastAPI(title="Movie Recommender API")
 
@@ -71,5 +63,9 @@ async def get_recommendations(
 
     return result
 
-if __name__ == "__main__":
+def main() -> None:
+    """Run the API server (console entry point)."""
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+if __name__ == "__main__":
+    main()

@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from src.models.collaborative_filtering import CollaborativeFilter
+from voight_kampff.models.collaborative_filtering import CollaborativeFilter
 from tests.conftest import UNRATED_MOVIE_ID
 
 
