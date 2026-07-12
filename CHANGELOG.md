@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `vk` command-line interface scaffolded with Typer: a `vk` console entry
+  point (installed via `pyproject.toml`) whose `--help` opens with the
+  Voight-Kampff banner, plus a `--version`/`-V` flag reporting the incept
+  date. The first step of the Nexus-2 "Deckard" milestone — the subcommands
+  (interrogate, retire, search, train, serve) follow
 - Real `pytest` test suite (16 tests) replacing the `test_recommender.py`
   print-script: loader shape checks, matrix/ID alignment regression tests,
   known-similarity fixtures for the model, and API tests via `TestClient`
