@@ -27,15 +27,11 @@ generations — each Nexus is more capable (and more human) than the last.
       align the matrix, add a `pytest` job, and add a `pylintrc`/`ruff` config so linting is
       deterministic. Remove or properly configure the mdBook and Jekyll workflows (there is
       currently no book or site for them to build — they're chasing phantom replicants).
-- [ ] **Proper packaging.** Replace the bare `setup.py` with a `pyproject.toml` carrying
+- [x] **Proper packaging.** Replace the bare `setup.py` with a `pyproject.toml` carrying
       dependencies, metadata, and console entry points; kill the `sys.path.insert` hack in
       `server.py`. Configure the appropriate package registry/index for the environment the
       project is developed in.
-- [ ] **Dataset acquisition script.** The README claims the MovieLens dataset is
-      "automatically downloaded" but no such code exists — the CSVs are committed to the
-      repo. Add a download/verify command (with checksum) and drop the raw data from git.
-      *Data should come from the off-world colonies on demand, not live in the Spinner's trunk.*
-- [ ] **Repo hygiene.** Ignore/remove `.DS_Store` files, `__pycache__`, and `.idea`; keep
+- [x] **Repo hygiene.** Ignore/remove `.DS_Store` files, `__pycache__`, and `.idea`; keep
       `.gitignore` authoritative.
 
 ## Nexus-2 — "Deckard" (a real CLI)
@@ -43,7 +39,7 @@ generations — each Nexus is more capable (and more human) than the last.
 *This is billed as a CLI solution, but right now there's no CLI — only an API server and a
 script. Time to put a blade runner on the street.*
 
-- [ ] **Scaffold the `vk` command** with Typer (or Click): entry point installed via
+- [x] **Scaffold the `vk` command** with Typer (or Click): entry point installed via
       `pyproject.toml`, `--help` that opens with the Voight-Kampff banner.
 - [ ] **`vk interrogate <movie>`** — the core command: given a movie (ID or title), return
       the top-N similar movies. *You sit the movie down, you ask it questions, you watch
