@@ -41,7 +41,7 @@ script. Time to put a blade runner on the street.*
 
 - [x] **Scaffold the `vk` command** with Typer (or Click): entry point installed via
       `pyproject.toml`, `--help` that opens with the Voight-Kampff banner.
-- [ ] **`vk interrogate <movie>`** — the core command: given a movie (ID or title), return
+- [x] **`vk interrogate <movie>`** — the core command: given a movie (ID or title), return
       the top-N similar movies. *You sit the movie down, you ask it questions, you watch
       which memories respond.*
 - [ ] **`vk retire <movie>`** — exclude a movie (or list) from future recommendations.

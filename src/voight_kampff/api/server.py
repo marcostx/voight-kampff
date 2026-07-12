@@ -1,22 +1,17 @@
 """FastAPI server implementation for the movie recommendation system."""
-from typing import List, Dict
+from typing import Dict, List
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
 
-from voight_kampff.data.loader import MovieDataLoader
-from voight_kampff.models.collaborative_filtering import CollaborativeFilter
+from voight_kampff.service import RecommenderService
 
 app = FastAPI(title="Movie Recommender API")
 
-# Initialize data and model
-data_loader = MovieDataLoader("data/raw")
-movies_df, ratings_df = data_loader.load_data()
-user_item_matrix, rated_movie_ids = data_loader.create_user_item_matrix()
-
-model = CollaborativeFilter()
-model.fit(user_item_matrix, rated_movie_ids)
+# Load the catalog and fit the model once, at import time. The same engine
+# backs the `vk` CLI, so the API and the blade runner never disagree.
+service = RecommenderService.from_data_dir("data/raw")
 
 class MovieRecommendation(BaseModel):
     """Pydantic model for movie recommendations."""
@@ -42,26 +37,18 @@ async def get_recommendations(
         List of recommended movies with their details
     """
     try:
-        recommendations = model.get_recommendations(
-            movie_id,
-            n_recommendations
-        )
+        recommendations = service.recommend(movie_id, n_recommendations)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e)) from e
 
-    # Get movie titles for recommendations
-    result = []
-    for rec_id, score in recommendations:
-        movie_title = movies_df[
-            movies_df['movieId'] == rec_id
-        ]['title'].iloc[0]
-        result.append({
-            "movie_id": rec_id,
-            "title": movie_title,
-            "similarity_score": score
-        })
-
-    return result
+    return [
+        {
+            "movie_id": rec.movie_id,
+            "title": rec.title,
+            "similarity_score": rec.similarity_score,
+        }
+        for rec in recommendations
+    ]
 
 def main() -> None:
     """Run the API server (console entry point)."""
