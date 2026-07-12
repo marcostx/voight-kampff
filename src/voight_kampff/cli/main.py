@@ -1,13 +1,15 @@
 """The root `vk` Typer application — the scaffold for the CLI blade runner.
 
 Every `vk` subcommand (interrogate, retire, search, train, serve) will hang
-off the `app` defined here. For now this module is just the scaffold the
-Nexus-2 milestone calls for: a themed banner, `--help`, and `--version`.
+off the `app` defined here, which also carries the banner, `--help`, and
+`--version`. Commands live in sibling modules and are registered below.
 """
 from importlib.metadata import PackageNotFoundError, version as read_version
 from typing import Optional
 
 import typer
+
+from voight_kampff.cli.interrogate import interrogate
 
 # The "VK" figlet, the project name, and the tagline shown at the top of
 # `vk --help`. Kept within 78 columns so it survives narrow terminals.
@@ -29,7 +31,7 @@ ROOT_HELP = (
     "Interrogate the catalog, retire the films you're done with, and let the "
     "blade runner surface what you should watch next.\n"
     "\n"
-    "This is the scaffold — the subcommands arrive with the Nexus-2 milestones."
+    "The interrogation is live — retire, search, train, and serve arrive next."
 )
 
 app = typer.Typer(
@@ -39,6 +41,9 @@ app = typer.Typer(
     add_completion=True,
     rich_markup_mode="rich",
 )
+
+# Subcommands live in sibling modules; register each on the app as it lands.
+app.command()(interrogate)
 
 
 def resolve_version() -> str:

@@ -40,6 +40,11 @@ def test_n_recommendations_parameter():
     assert len(response.json()) == 3
 
 
+def test_non_positive_n_recommendations_returns_422():
+    response = client.get("/recommendations/1", params={"n_recommendations": 0})
+    assert response.status_code == 422
+
+
 def test_unknown_movie_returns_404():
     response = client.get("/recommendations/999999")
     assert response.status_code == 404

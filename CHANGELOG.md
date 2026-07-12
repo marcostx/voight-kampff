@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `vk interrogate <movie>` — the core recommendation command: pass a numeric
+  movieId or a (case-insensitive) title and it returns the top-N most similar
+  movies in a Rich table. Backed by a new shared `RecommenderService` engine.
+  The second step of the Nexus-2 "Deckard" milestone
 - `vk` command-line interface scaffolded with Typer: a `vk` console entry
   point (installed via `pyproject.toml`) whose `--help` opens with the
   Voight-Kampff banner, plus a `--version`/`-V` flag reporting the incept
@@ -31,6 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- The FastAPI server now loads its data and model through the shared
+  `RecommenderService` instead of wiring the loader and model by hand; the
+  API's responses and 404 behavior are unchanged
 - Package moved to a src layout under a real import name: `src/voight_kampff/`
   instead of a top-level package literally named `src`; the `sys.path.insert`
   hack in `server.py` is gone
@@ -53,6 +60,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Non-positive recommendation counts are now rejected instead of silently
+  misbehaving: the API returns 422 for `n_recommendations < 1` and the shared
+  service raises `ValueError`, where a negative count previously sliced out
+  almost the entire catalog (`vk interrogate` was already guarded by `min=1`)
 - **Movie ID misalignment (critical):** the user-item matrix only contains
   movies that have ratings (9,724 columns), but the model was fit with all
   9,742 IDs from `movies.csv`, attributing similarity scores to the wrong
