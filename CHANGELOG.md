@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Minimal mdBook documentation site: a `book.toml` (pointing mdBook at
+  `docs/` so it doesn't collide with the Python `src/`), a `docs/SUMMARY.md`
+  table of contents, and an introduction page. The `Deploy mdBook site to
+  Pages` workflow now builds instead of failing on a missing `SUMMARY.md`
 - `vk interrogate <movie>` — the core recommendation command: pass a numeric
   movieId or a (case-insensitive) title and it returns the top-N most similar
   movies in a Rich table. Backed by a new shared `RecommenderService` engine.
