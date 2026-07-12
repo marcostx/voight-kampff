@@ -1,0 +1,12 @@
+[book]
+title = "Voight-Kampff"
+description = "A CLI-first movie recommendation system: item-based collaborative filtering over the MovieLens dataset."
+authors = ["Marcos Teixeira"]
+language = "en"
+# The Python package lives in ./src, so point the book at ./docs instead of
+# mdBook's default source directory (which would be ./src).
+src = "docs"
+
+[output.html]
+git-repository-url = "https://github.com/marcostx/voight-kampff"
+edit-url-template = "https://github.com/marcostx/voight-kampff/edit/main/{path}"
