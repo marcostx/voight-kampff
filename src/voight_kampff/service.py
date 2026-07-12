@@ -107,14 +107,17 @@ class RecommenderService:
 
         Args:
             movie_id: The movie to base recommendations on.
-            n: Number of recommendations to return.
+            n: Number of recommendations to return (must be at least 1).
 
         Returns:
             A list of Recommendation objects with titles resolved.
 
         Raises:
-            ValueError: If the movie has no ratings and is absent from the model.
+            ValueError: If `n` is less than 1, or the movie has no ratings and
+                is absent from the model.
         """
+        if n < 1:
+            raise ValueError(f"n must be at least 1, got {n}.")
         ranked = self.model.get_recommendations(movie_id, n)
         return [
             Recommendation(int(mid), self.title_for(int(mid)), float(score))

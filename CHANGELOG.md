@@ -60,6 +60,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Non-positive recommendation counts are now rejected instead of silently
+  misbehaving: the API returns 422 for `n_recommendations < 1` and the shared
+  service raises `ValueError`, where a negative count previously sliced out
+  almost the entire catalog (`vk interrogate` was already guarded by `min=1`)
 - **Movie ID misalignment (critical):** the user-item matrix only contains
   movies that have ratings (9,724 columns), but the model was fit with all
   9,742 IDs from `movies.csv`, attributing similarity scores to the wrong

@@ -66,3 +66,13 @@ def test_interrogate_unknown_movie_exits_nonzero(synthetic_data_dir):
     )
     assert result.exit_code == 1
     assert "No response" in result.output
+
+
+def test_interrogate_rejects_non_positive_n(synthetic_data_dir):
+    result = runner.invoke(
+        app,
+        ["interrogate", "1", "-n", "0", "--data-dir", str(synthetic_data_dir)],
+        env={"COLUMNS": "200"},
+    )
+    # Typer enforces the min=1 bound before we ever touch the dataset.
+    assert result.exit_code == 2

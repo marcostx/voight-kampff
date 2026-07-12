@@ -1,7 +1,7 @@
 """FastAPI server implementation for the movie recommendation system."""
 from typing import Dict, List
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 import uvicorn
 
@@ -25,7 +25,7 @@ class MovieRecommendation(BaseModel):
 )
 async def get_recommendations(
     movie_id: int,
-    n_recommendations: int = 5
+    n_recommendations: int = Query(5, ge=1)
 ) -> List[Dict]:
     """Get movie recommendations based on a movie ID.
 

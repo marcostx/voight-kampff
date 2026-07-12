@@ -56,3 +56,10 @@ def test_recommend_on_unrated_movie_fails(service):
     assert resolved == UNRATED_MOVIE_ID
     with pytest.raises(ValueError, match="not found"):
         service.recommend(resolved)
+
+
+@pytest.mark.parametrize("bad_n", [0, -1])
+def test_recommend_rejects_non_positive_n(service, bad_n):
+    # A negative n would otherwise slice out almost the whole catalog.
+    with pytest.raises(ValueError, match="at least 1"):
+        service.recommend(1, n=bad_n)
