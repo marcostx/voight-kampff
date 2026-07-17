@@ -5,6 +5,14 @@ from typing import List, Optional, Tuple
 import numpy as np
 import pandas as pd
 
+# The MovieLens layout under ``data_dir``. Kept as constants so the CSV paths
+# have a single source of truth — the loader reads them and the incept stamp
+# hashes them.
+DATASET_SUBDIR = "ml-latest-small"
+MOVIES_FILENAME = "movies.csv"
+RATINGS_FILENAME = "ratings.csv"
+
+
 class MovieDataLoader:
     """Handles loading and processing of movie dataset."""
 
@@ -18,18 +26,27 @@ class MovieDataLoader:
         self.movies_df: Optional[pd.DataFrame] = None
         self.ratings_df: Optional[pd.DataFrame] = None
 
+    def dataset_files(self) -> List[Path]:
+        """Return the raw dataset files that define the catalog.
+
+        The order is fixed (movies then ratings) so a content hash taken over
+        them is reproducible — the basis for a trained model's incept date.
+
+        Returns:
+            The movies.csv and ratings.csv paths, in that order.
+        """
+        base = self.data_dir / DATASET_SUBDIR
+        return [base / MOVIES_FILENAME, base / RATINGS_FILENAME]
+
     def load_data(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """Load movies and ratings data from CSV files.
 
         Returns:
             Tuple containing movies and ratings DataFrames
         """
-        self.movies_df = pd.read_csv(
-            self.data_dir / "ml-latest-small" / "movies.csv"
-        )
-        self.ratings_df = pd.read_csv(
-            self.data_dir / "ml-latest-small" / "ratings.csv"
-        )
+        movies_path, ratings_path = self.dataset_files()
+        self.movies_df = pd.read_csv(movies_path)
+        self.ratings_df = pd.read_csv(ratings_path)
         return self.movies_df, self.ratings_df
 
     def create_user_item_matrix(self) -> Tuple[np.ndarray, List[int]]:

@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `vk train` — build the item-item similarity matrix and persist it as a
+  single, reloadable artifact (default `data/processed/model.vk`), stamped
+  with its **incept date**: a SHA-256 hash of the dataset files, the package
+  version, the UTC training timestamp, and dataset stats (users, movies,
+  ratings). Refuses to overwrite an existing artifact without `--force`, and
+  prints the incept stamp in a Rich table. The on-disk format is a compressed
+  `.npz` (no pickling), versioned so future builds can reject layouts they
+  don't understand. Part of the Nexus-2 "Deckard" milestone
+  ([#13](https://github.com/marcostx/voight-kampff/issues/13))
 - Minimal mdBook documentation site: a `book.toml` (pointing mdBook at
   `docs/` so it doesn't collide with the Python `src/`), a `docs/SUMMARY.md`
   table of contents, and an introduction page. The `Deploy mdBook site to

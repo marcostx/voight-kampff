@@ -4,12 +4,13 @@ Every `vk` subcommand (interrogate, retire, search, train, serve) will hang
 off the `app` defined here, which also carries the banner, `--help`, and
 `--version`. Commands live in sibling modules and are registered below.
 """
-from importlib.metadata import PackageNotFoundError, version as read_version
 from typing import Optional
 
 import typer
 
 from voight_kampff.cli.interrogate import interrogate
+from voight_kampff.cli.train import train
+from voight_kampff.utils.version import resolve_version
 
 # The "VK" figlet, the project name, and the tagline shown at the top of
 # `vk --help`. Kept within 78 columns so it survives narrow terminals.
@@ -31,7 +32,7 @@ ROOT_HELP = (
     "Interrogate the catalog, retire the films you're done with, and let the "
     "blade runner surface what you should watch next.\n"
     "\n"
-    "The interrogation is live — retire, search, train, and serve arrive next."
+    "Interrogation and training are live — retire, search, and serve arrive next."
 )
 
 app = typer.Typer(
@@ -44,14 +45,7 @@ app = typer.Typer(
 
 # Subcommands live in sibling modules; register each on the app as it lands.
 app.command()(interrogate)
-
-
-def resolve_version() -> str:
-    """Return the installed package version, or a placeholder when unknown."""
-    try:
-        return read_version("voight-kampff")
-    except PackageNotFoundError:  # running from a source tree without an install
-        return "0.0.0+unknown"
+app.command()(train)
 
 
 def _version_callback(show: bool) -> None:

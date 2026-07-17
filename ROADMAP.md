@@ -47,7 +47,7 @@ script. Time to put a blade runner on the street.*
 - [ ] **`vk retire <movie>`** — exclude a movie (or list) from future recommendations.
 - [ ] **`vk search <title>`** — fuzzy title lookup so users never need to know raw
       `movieId`s. *An Esper machine for the catalog: "Enhance 224 to 176."*
-- [ ] **`vk train`** — build and persist the similarity matrix as an artifact, stamped with
+- [x] **`vk train`** — build and persist the similarity matrix as an artifact, stamped with
       its **incept date** (dataset hash + version metadata).
 - [ ] **`vk serve`** — launch the FastAPI server from the CLI instead of `python src/api/server.py`.
 - [ ] **CLI ergonomics:** `--json` output for piping, meaningful exit codes, Rich-powered
