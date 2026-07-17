@@ -15,6 +15,8 @@ layout this build doesn't understand.
 """
 import hashlib
 import json
+import os
+import tempfile
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -126,15 +128,26 @@ class ModelArtifact:
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
         meta = {"format_version": ARTIFACT_FORMAT_VERSION, **asdict(self.incept)}
-        # Write through a handle so the exact filename is honored (np.savez
+        # Write to a temp file in the same directory, then atomically replace,
+        # so an interrupted or failed write never leaves a corrupt artifact in
+        # place. Writing through a handle also keeps the exact filename (np.savez
         # would otherwise append a .npz suffix).
-        with open(path, "wb") as handle:
-            np.savez_compressed(
-                handle,
-                item_similarity_matrix=self.item_similarity_matrix,
-                movie_ids=np.asarray(self.movie_ids, dtype=np.int64),
-                meta=np.asarray(json.dumps(meta)),
-            )
+        handle = tempfile.NamedTemporaryFile(
+            dir=path.parent, prefix=f".{path.name}.", suffix=".tmp", delete=False
+        )
+        tmp_path = Path(handle.name)
+        try:
+            with handle:
+                np.savez_compressed(
+                    handle,
+                    item_similarity_matrix=self.item_similarity_matrix,
+                    movie_ids=np.asarray(self.movie_ids, dtype=np.int64),
+                    meta=np.asarray(json.dumps(meta)),
+                )
+            os.replace(tmp_path, path)
+        finally:
+            # No-op once the replace has moved the temp file into place.
+            tmp_path.unlink(missing_ok=True)
         return path
 
     @classmethod

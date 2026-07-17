@@ -5,6 +5,7 @@ fast — the empathy test for a replicant's own paperwork.
 """
 # pylint: disable=missing-function-docstring, redefined-outer-name  # pytest idiom
 import json
+from dataclasses import FrozenInstanceError
 
 import numpy as np
 import pytest
@@ -83,6 +84,25 @@ def test_save_creates_missing_parent_directories(artifact, tmp_path):
     assert path.exists()
 
 
+def test_save_is_atomic_when_the_write_fails(artifact, tmp_path, monkeypatch):
+    """A failed write must not corrupt an existing artifact or leak temp files."""
+    out_dir = tmp_path / "out"
+    out_dir.mkdir()
+    path = out_dir / "model.vk"
+    path.write_bytes(b"a prior, intact replicant")
+
+    def boom(*_args, **_kwargs):
+        raise OSError("disk full")
+
+    monkeypatch.setattr(np, "savez_compressed", boom)
+    with pytest.raises(OSError, match="disk full"):
+        artifact.save(path)
+
+    # The pre-existing artifact is untouched and no partial temp file lingers.
+    assert path.read_bytes() == b"a prior, intact replicant"
+    assert sorted(p.name for p in out_dir.iterdir()) == ["model.vk"]
+
+
 def test_load_missing_artifact_raises(tmp_path):
     with pytest.raises(FileNotFoundError, match="No model artifact"):
         ModelArtifact.load(tmp_path / "absent.vk")
@@ -113,5 +133,5 @@ def test_load_rejects_unknown_format_version(tmp_path):
 
 def test_incept_stamp_is_immutable():
     stamp = InceptStamp("abc123", "0.1.0", "2026-01-01T00:00:00+00:00", 1, 1, 1)
-    with pytest.raises(Exception):  # frozen dataclass forbids reassignment
+    with pytest.raises(FrozenInstanceError):  # frozen dataclass forbids reassignment
         stamp.dataset_hash = "tampered"  # type: ignore[misc]
