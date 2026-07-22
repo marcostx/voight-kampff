@@ -64,10 +64,13 @@ pip install -e .
 Start the FastAPI server from the repository root (it reads the dataset
 from `data/raw/`):
 ```bash
-voight-kampff-server
+vk serve
 ```
 
 The API will be available at `http://localhost:8000`
+
+The existing `voight-kampff-server` executable remains available for
+backward compatibility.
 
 ### Getting Recommendations
 

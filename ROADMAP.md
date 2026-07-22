@@ -49,7 +49,7 @@ script. Time to put a blade runner on the street.*
       `movieId`s. *An Esper machine for the catalog: "Enhance 224 to 176."*
 - [x] **`vk train`** — build and persist the similarity matrix as an artifact, stamped with
       its **incept date** (dataset hash + version metadata).
-- [ ] **`vk serve`** — launch the FastAPI server from the CLI instead of `python src/api/server.py`.
+- [x] **`vk serve`** — launch the FastAPI server from the CLI instead of `python src/api/server.py`.
 - [ ] **CLI ergonomics:** `--json` output for piping, meaningful exit codes, Rich-powered
       tables/progress, shell completion, and a config file (`~/.config/voight-kampff/`).
 

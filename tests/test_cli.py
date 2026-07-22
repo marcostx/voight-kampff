@@ -4,6 +4,8 @@ These drive the Typer app directly through CliRunner, so they need no dataset
 and run fast — the empathy test for the blade runner's own paperwork.
 """
 # pylint: disable=missing-function-docstring  # test names are self-describing
+from unittest.mock import patch
+
 import pytest
 from typer.testing import CliRunner
 
@@ -33,10 +35,24 @@ def test_version_flag_reports_the_incept_date(flag):
 
 def test_bare_invocation_shows_help():
     result = runner.invoke(app, [])
-    # Typer's no_args_is_help exits 2 (no command given) and prints the banner.
-    assert result.exit_code == 2
+    # Typer treats the implicit help display as a successful invocation.
+    assert result.exit_code == 0
     assert "Usage:" in result.output
     assert "Voight-Kampff" in result.output
+
+
+def test_help_lists_the_serve_command():
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "serve" in result.output
+
+
+def test_serve_launches_the_api_server():
+    with patch("voight_kampff.cli.serve._launch_server") as launch_server:
+        result = runner.invoke(app, ["serve"])
+
+    assert result.exit_code == 0
+    launch_server.assert_called_once_with()
 
 
 def test_interrogate_by_id_returns_similar_movies(synthetic_data_dir):
