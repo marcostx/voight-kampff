@@ -50,7 +50,7 @@ script. Time to put a blade runner on the street.*
 - [x] **`vk train`** — build and persist the similarity matrix as an artifact, stamped with
       its **incept date** (dataset hash + version metadata).
 - [x] **`vk serve`** — launch the FastAPI server from the CLI instead of `python src/api/server.py`.
-- [ ] **CLI ergonomics:** `--json` output for piping, meaningful exit codes, Rich-powered
+- [x] **CLI ergonomics:** `--json` output for piping, meaningful exit codes, Rich-powered
       tables/progress, shell completion, and a config file (`~/.config/voight-kampff/`).
 
 ## Nexus-3 — "The Esper Machine" (model & data improvements)

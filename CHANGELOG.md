@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- CLI ergonomics for scripting and repeatable defaults: `vk interrogate` and
+  `vk train` now support pipe-safe `--json` output; application failures use
+  documented exit codes and stderr; a TOML file at
+  `~/.config/voight-kampff/config.toml` can set the data directory, artifact
+  path, and recommendation count; and shell completion is documented and
+  covered by tests. Rich is now a direct dependency rather than a transitive
+  one
 - `vk serve` — launch the existing FastAPI recommendation server from the
   unified CLI. The command defaults to `data/raw` and `0.0.0.0:8000`,
   accepts `--data-dir` for alternate catalogs, loads the API only when

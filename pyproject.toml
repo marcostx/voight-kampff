@@ -17,6 +17,7 @@ dependencies = [
     "fastapi>=0.115.6",
     "uvicorn>=0.34.0",
     "typer>=0.15.0",
+    "rich>=15.0.0",
 ]
 
 [project.optional-dependencies]
