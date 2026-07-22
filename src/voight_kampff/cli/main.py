@@ -9,6 +9,7 @@ from typing import Optional
 import typer
 
 from voight_kampff.cli.interrogate import interrogate
+from voight_kampff.cli.serve import serve
 from voight_kampff.cli.train import train
 from voight_kampff.utils.version import resolve_version
 
@@ -32,7 +33,7 @@ ROOT_HELP = (
     "Interrogate the catalog, retire the films you're done with, and let the "
     "blade runner surface what you should watch next.\n"
     "\n"
-    "Interrogation and training are live — retire, search, and serve arrive next."
+    "Interrogation, training, and serving are live — retire and search arrive next."
 )
 
 app = typer.Typer(
@@ -46,6 +47,7 @@ app = typer.Typer(
 # Subcommands live in sibling modules; register each on the app as it lands.
 app.command()(interrogate)
 app.command()(train)
+app.command()(serve)
 
 
 def _version_callback(show: bool) -> None:

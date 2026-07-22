@@ -4,6 +4,8 @@ These drive the Typer app directly through CliRunner, so they need no dataset
 and run fast — the empathy test for the blade runner's own paperwork.
 """
 # pylint: disable=missing-function-docstring  # test names are self-describing
+from unittest.mock import patch
+
 import pytest
 from typer.testing import CliRunner
 
@@ -37,6 +39,46 @@ def test_bare_invocation_shows_help():
     assert result.exit_code == 2
     assert "Usage:" in result.output
     assert "Voight-Kampff" in result.output
+
+
+def test_help_lists_the_serve_command():
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "serve" in result.output
+
+
+def test_serve_launches_the_api_server():
+    with patch("voight_kampff.cli.serve._launch_server") as launch_server:
+        result = runner.invoke(app, ["serve"])
+
+    assert result.exit_code == 0
+    launch_server.assert_called_once_with("data/raw")
+
+
+def test_serve_loads_a_custom_data_dir(synthetic_data_dir):
+    with (
+        patch("voight_kampff.api.server.app.state.service", create=True),
+        patch("voight_kampff.api.server.uvicorn.run") as run_server,
+    ):
+        result = runner.invoke(
+            app,
+            ["serve", "--data-dir", str(synthetic_data_dir)],
+        )
+        launched_app = run_server.call_args.args[0]
+        selected_title = launched_app.state.service.title_for(1)
+
+    assert result.exit_code == 0
+    run_server.assert_called_once()
+    assert selected_title == "Blade Runner (1982)"
+
+
+def test_serve_missing_dataset_exits_nonzero(tmp_path):
+    result = runner.invoke(
+        app,
+        ["serve", "--data-dir", str(tmp_path / "nowhere")],
+    )
+    assert result.exit_code == 1
+    assert "No catalog" in result.output
 
 
 def test_interrogate_by_id_returns_similar_movies(synthetic_data_dir):

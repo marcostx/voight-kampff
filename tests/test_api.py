@@ -1,7 +1,7 @@
 """API tests via FastAPI TestClient.
 
-Importing voight_kampff.api.server loads the real MovieLens dataset and trains the
-model, so these are integration tests; run pytest from the repo root.
+Requests load the real MovieLens dataset and train the model, so these are
+integration tests; run pytest from the repo root.
 """
 # pylint: disable=missing-function-docstring  # test names are self-describing
 from pathlib import Path
