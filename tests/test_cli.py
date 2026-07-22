@@ -8,6 +8,8 @@ import pytest
 from typer.testing import CliRunner
 
 from voight_kampff.cli.main import app, resolve_version
+from voight_kampff.models.artifact import ModelArtifact
+from tests.conftest import RATED_MOVIE_IDS
 
 runner = CliRunner()
 
@@ -76,3 +78,55 @@ def test_interrogate_rejects_non_positive_n(synthetic_data_dir):
     )
     # Typer enforces the min=1 bound before we ever touch the dataset.
     assert result.exit_code == 2
+
+
+def test_train_writes_an_artifact_stamped_with_its_incept_date(
+    synthetic_data_dir, tmp_path
+):
+    output = tmp_path / "model.vk"
+    result = runner.invoke(
+        app,
+        ["train", "--data-dir", str(synthetic_data_dir), "-o", str(output)],
+        env={"COLUMNS": "200"},
+    )
+    assert result.exit_code == 0
+    assert output.exists()
+    assert "incept" in result.output.lower()
+    # The artifact is a real, reloadable model, not just a file on disk.
+    assert ModelArtifact.load(output).movie_ids == RATED_MOVIE_IDS
+
+
+def test_train_refuses_to_overwrite_without_force(synthetic_data_dir, tmp_path):
+    output = tmp_path / "model.vk"
+    output.write_text("a prior replicant")
+    result = runner.invoke(
+        app,
+        ["train", "--data-dir", str(synthetic_data_dir), "-o", str(output)],
+        env={"COLUMNS": "200"},
+    )
+    assert result.exit_code == 1
+    assert "already" in result.output.lower()
+    # The existing file is left untouched.
+    assert output.read_text() == "a prior replicant"
+
+
+def test_train_force_overwrites_existing_artifact(synthetic_data_dir, tmp_path):
+    output = tmp_path / "model.vk"
+    output.write_text("a prior replicant")
+    result = runner.invoke(
+        app,
+        ["train", "--data-dir", str(synthetic_data_dir), "-o", str(output), "--force"],
+        env={"COLUMNS": "200"},
+    )
+    assert result.exit_code == 0
+    assert ModelArtifact.load(output).movie_ids == RATED_MOVIE_IDS
+
+
+def test_train_missing_dataset_exits_nonzero(tmp_path):
+    result = runner.invoke(
+        app,
+        ["train", "--data-dir", str(tmp_path / "nowhere"), "-o", str(tmp_path / "m.vk")],
+        env={"COLUMNS": "200"},
+    )
+    assert result.exit_code == 1
+    assert "No catalog" in result.output
