@@ -35,8 +35,8 @@ def test_version_flag_reports_the_incept_date(flag):
 
 def test_bare_invocation_shows_help():
     result = runner.invoke(app, [])
-    # Typer treats the implicit help display as a successful invocation.
-    assert result.exit_code == 0
+    # Typer's no_args_is_help exits 2 (no command given) and prints the banner.
+    assert result.exit_code == 2
     assert "Usage:" in result.output
     assert "Voight-Kampff" in result.output
 
