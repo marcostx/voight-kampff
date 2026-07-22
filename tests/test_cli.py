@@ -7,6 +7,7 @@ and run fast — the empathy test for the blade runner's own paperwork.
 import json
 from unittest.mock import patch
 
+from click import unstyle
 import pytest
 from typer.testing import CliRunner
 
@@ -52,8 +53,9 @@ def test_bare_invocation_shows_help():
 def test_help_lists_the_serve_command():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "serve" in result.output
-    assert "--config" in result.output
+    help_output = unstyle(result.output)
+    assert "serve" in help_output
+    assert "--config" in help_output
 
 
 def test_shell_completion_script_is_available():
