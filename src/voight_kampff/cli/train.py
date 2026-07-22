@@ -4,34 +4,42 @@
     incept date and file away, so the next blade runner doesn't have to
     rebuild it from memory.
 """
+from dataclasses import asdict
 from pathlib import Path
+from typing import Optional
 
 import typer
-from rich.console import Console
 from rich.table import Table
 
-from voight_kampff.models.artifact import DEFAULT_ARTIFACT_PATH, ModelArtifact
-
-console = Console()
+from voight_kampff.cli.config import config_from_context
+from voight_kampff.cli.output import ExitCode, console, emit_json, fail, working
+from voight_kampff.models.artifact import ModelArtifact
 
 
 def train(
-    data_dir: str = typer.Option(
-        "data/raw",
+    ctx: typer.Context,
+    data_dir: Optional[str] = typer.Option(
+        None,
         "--data-dir",
-        help="Directory holding the MovieLens dataset (ml-latest-small/).",
+        help="MovieLens data directory (default: config or data/raw).",
     ),
-    output: Path = typer.Option(
-        DEFAULT_ARTIFACT_PATH,
+    output: Optional[Path] = typer.Option(
+        None,
         "--output",
         "-o",
-        help="Where to write the trained model artifact.",
+        help="Artifact destination (default: config or data/processed/model.vk).",
     ),
     force: bool = typer.Option(
         False,
         "--force",
         "-f",
         help="Overwrite an existing artifact at the output path.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        "-j",
+        help="Emit machine-readable JSON instead of a Rich table.",
     ),
 ) -> None:
     """Build the similarity matrix and persist it, stamped with its incept date.
@@ -40,24 +48,36 @@ def train(
     single artifact carrying the matrix, its movie IDs, and an incept stamp
     (dataset hash, version, and training time) for later loading.
     """
-    output = Path(output)
-    if output.exists() and not force:
-        console.print(
-            f"[bold red]An artifact already lives at[/] {output}. "
-            "Pass [bold]--force[/] to give it a new incept date."
+    config = config_from_context(ctx)
+    resolved_data_dir = data_dir if data_dir is not None else config.data_dir
+    resolved_output = Path(output if output is not None else config.artifact_path)
+
+    if resolved_output.exists() and not force:
+        fail(
+            "An artifact already lives at",
+            f"{resolved_output}. Pass --force to give it a new incept date.",
+            ExitCode.CONFLICT,
+            json_output,
         )
-        raise typer.Exit(code=1)
 
     try:
-        with console.status("[bold]Training the model…"):
-            artifact = ModelArtifact.train(data_dir)
+        with working("[bold]Training the model…", json_output):
+            artifact = ModelArtifact.train(resolved_data_dir)
     except FileNotFoundError as exc:
-        console.print(f"[bold red]No catalog to train on.[/] {exc}")
-        raise typer.Exit(code=1) from exc
+        fail("No catalog to train on.", str(exc), ExitCode.NOT_FOUND, json_output)
 
-    saved_path = artifact.save(output)
+    saved_path = artifact.save(resolved_output)
 
     stamp = artifact.incept
+    if json_output:
+        emit_json(
+            {
+                "artifact": str(saved_path),
+                "incept": asdict(stamp),
+            }
+        )
+        return
+
     table = Table(title="A new model has been incepted", title_style="bold")
     table.add_column("Field", style="dim")
     table.add_column("Value")

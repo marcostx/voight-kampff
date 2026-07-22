@@ -1,9 +1,10 @@
 """`vk serve` — launch the FastAPI recommendation server."""
+from typing import Optional
+
 import typer
-from rich.console import Console
 
-
-console = Console()
+from voight_kampff.cli.config import config_from_context
+from voight_kampff.cli.output import ExitCode, fail
 
 
 def _launch_server(data_dir: str) -> None:
@@ -17,15 +18,17 @@ def _launch_server(data_dir: str) -> None:
 
 
 def serve(
-    data_dir: str = typer.Option(
-        "data/raw",
+    ctx: typer.Context,
+    data_dir: Optional[str] = typer.Option(
+        None,
         "--data-dir",
-        help="Directory holding the MovieLens dataset (ml-latest-small/).",
+        help="MovieLens data directory (default: config or data/raw).",
     ),
 ) -> None:
     """Launch the FastAPI server on 0.0.0.0:8000."""
+    config = config_from_context(ctx)
+    resolved_data_dir = data_dir if data_dir is not None else config.data_dir
     try:
-        _launch_server(data_dir)
+        _launch_server(resolved_data_dir)
     except FileNotFoundError as exc:
-        console.print(f"[bold red]No catalog to serve.[/] {exc}")
-        raise typer.Exit(code=1) from exc
+        fail("No catalog to serve.", str(exc), ExitCode.NOT_FOUND)

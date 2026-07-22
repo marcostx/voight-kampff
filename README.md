@@ -59,6 +59,54 @@ pip install -e .
 
 ## Usage
 
+### Getting CLI Recommendations
+
+Interrogate a movie by ID or title:
+```bash
+vk interrogate 1 --number 10
+vk interrogate "Toy Story (1995)"
+```
+
+Use `--json` for scripts and pipelines:
+```bash
+vk interrogate 1 --json | jq '.recommendations[]'
+vk train --json
+```
+
+Human-readable output uses Rich tables and activity indicators. JSON mode
+writes one JSON value to stdout and sends structured errors to stderr.
+
+### Configuration
+
+Shared defaults can live in `~/.config/voight-kampff/config.toml` (or
+`$XDG_CONFIG_HOME/voight-kampff/config.toml`):
+```toml
+data_dir = "/path/to/movie-data"
+artifact_path = "/path/to/model.vk"
+number = 10
+```
+
+Command-line options override configured values. Use `vk --config PATH ...`
+or the `VK_CONFIG` environment variable to select another file.
+
+### Exit Codes
+
+- `0` — success
+- `1` — unexpected operational error
+- `2` — invalid command-line usage
+- `3` — requested movie, dataset, or other input was not found
+- `4` — an existing artifact conflicts with the requested operation
+- `5` — configuration is missing or invalid
+
+### Shell Completion
+
+Typer can install completion for the current shell:
+```bash
+vk --install-completion
+```
+
+Use `vk --show-completion` to print the script instead.
+
 ### Running the API Server
 
 Start the FastAPI server (it reads the dataset from `data/raw/` by default):

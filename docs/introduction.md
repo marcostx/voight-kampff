@@ -17,7 +17,26 @@ vk --help
 # Interrogate a movie — by id or title — for its nearest neighbours
 vk interrogate "Toy Story (1995)"
 vk interrogate 1 --number 10
+
+# Produce pipe-safe output
+vk interrogate 1 --json
+
+# Enable completion for the current shell
+vk --install-completion
 ```
+
+## Configuration
+
+Put shared defaults in `~/.config/voight-kampff/config.toml`:
+
+```toml
+data_dir = "/path/to/movie-data"
+artifact_path = "/path/to/model.vk"
+number = 10
+```
+
+Explicit command-line options take precedence. Pass `vk --config PATH ...`
+or set `VK_CONFIG` to use a different file.
 
 ## Where to next
 

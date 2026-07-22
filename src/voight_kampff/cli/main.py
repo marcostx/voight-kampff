@@ -4,11 +4,14 @@ Every `vk` subcommand (interrogate, retire, search, train, serve) will hang
 off the `app` defined here, which also carries the banner, `--help`, and
 `--version`. Commands live in sibling modules and are registered below.
 """
+from pathlib import Path
 from typing import Optional
 
 import typer
 
+from voight_kampff.cli.config import ConfigError, load_config
 from voight_kampff.cli.interrogate import interrogate
+from voight_kampff.cli.output import ExitCode, fail
 from voight_kampff.cli.serve import serve
 from voight_kampff.cli.train import train
 from voight_kampff.utils.version import resolve_version
@@ -59,6 +62,13 @@ def _version_callback(show: bool) -> None:
 
 @app.callback()
 def root(
+    ctx: typer.Context,
+    config_path: Optional[Path] = typer.Option(
+        None,
+        "--config",
+        envvar="VK_CONFIG",
+        help="TOML configuration file (default: ~/.config/voight-kampff/config.toml).",
+    ),
     _version: Optional[bool] = typer.Option(
         None,
         "--version",
@@ -68,7 +78,11 @@ def root(
         is_eager=True,
     ),
 ) -> None:
-    """Root options shared by every vk subcommand."""
+    """Load configuration shared by every vk subcommand."""
+    try:
+        ctx.obj = load_config(config_path)
+    except ConfigError as exc:
+        fail("Invalid configuration.", str(exc), ExitCode.CONFIG)
 
 
 def main() -> None:
