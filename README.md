@@ -61,10 +61,14 @@ pip install -e .
 
 ### Running the API Server
 
-Start the FastAPI server from the repository root (it reads the dataset
-from `data/raw/`):
+Start the FastAPI server (it reads the dataset from `data/raw/` by default):
 ```bash
 vk serve
+```
+
+Point it at a different MovieLens dataset location when needed:
+```bash
+vk serve --data-dir /path/to/movie-data
 ```
 
 The API will be available at `http://localhost:8000`

@@ -11,9 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `vk serve` — launch the existing FastAPI recommendation server from the
-  unified CLI. The command keeps the current `data/raw` and
-  `0.0.0.0:8000` defaults, loads the API only when invoked, and retains the
-  `voight-kampff-server` executable for backward compatibility
+  unified CLI. The command defaults to `data/raw` and `0.0.0.0:8000`,
+  accepts `--data-dir` for alternate catalogs, loads the API only when
+  invoked, and retains the `voight-kampff-server` executable for backward
+  compatibility
 - `vk train` — build the item-item similarity matrix and persist it as a
   single, reloadable artifact (default `data/processed/model.vk`), stamped
   with its **incept date**: a SHA-256 hash of the dataset files, the package
